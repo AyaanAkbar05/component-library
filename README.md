@@ -1,73 +1,32 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+#Component Library
+This project contains a set of simple, reusable React components built with TypeScript. Each component is fully typed and designed for flexibility, readability, and easy integration.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Installation:
+To use the components, install the package using npm.
 
-## React Compiler
+Usage:
+Import the component you need and include it in your React project.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Props Overview:
+Each component includes clearly defined props. Required props ensure correct usage, while optional ones add flexibility without breaking functionality. Default values are set for common use cases.
 
-## Expanding the ESLint configuration
+Design Considerations:
+The components are designed with simplicity and reusability in mind. TypeScript ensures type safety across all props, and composition allows multiple components to work together seamlessly.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+#Reflection Questions
+1. How did you handle optional props in your components?
+I used TypeScript’s optional props (?) and default values inside components. Conditional rendering made sure elements only appeared when those props were provided, like showing the edit button only if onEdit existed.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+2. What considerations did you make when designing the component interfaces?
+I focused on keeping the interfaces clean, reusable, and easy to understand. Each one included only the necessary fields, with clear typing for event handlers and an optional children prop for flexibility.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+3. How did you ensure type safety across your components?
+I defined all props with TypeScript interfaces and used strict typing for function parameters. This helped catch errors early and kept the components consistent and predictable.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+4. What challenges did you face when implementing component composition?
+The main challenge was managing state and communication between components. I solved this by lifting state to the parent and passing handler functions as props, which kept everything organized and easy to control.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
