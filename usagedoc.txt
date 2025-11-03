@@ -1,0 +1,142 @@
+import React from 'react';
+
+import type { AlertBoxProps} from '../../types';
+
+export const AlertBox: React.FC<AlertBoxProps> = ({type, message, onClose, children}) =>{
+    const alertStyles= {
+        success: 'bg-green-100 border-green-500 text-green-700',
+        error: 'bg-red-100 bg-red-500 text-red-700',
+        warning: 'bg-yellow-100 bg-yellow-500 text-yellow-700',
+        info: 'bg-blue-100 bg-blue-500 text-blue-700',
+    };
+
+    return (
+        <div className={`p-4 border-l-4 ${alertStyles[type]}`}>
+            <div className= "flex justify-between items-center">
+                <p>{message}</p>
+                {onClose && (<button onClick= {onClose} className="ml-4 text-gray-500 hover:text-gray-700">x</button>)}
+            </div>
+            <div>{children}</div>
+        </div>
+
+    );
+};
+#Description:
+Displays a message with a visual style based on the alert type (success, error, warning, info).
+Optional onClose adds a close button, and children can include extra info or content.
+
+
+import React from 'react';
+import { type UserProfileCardProps} from '../../types';
+
+export const UserProfileCard : React.FC<UserProfileCardProps> = ({user, showEmail, showRole, onEdit, children})=>{
+    return(
+        <div>
+            <div className= "flex justify-center items-center gap-5 p-4">
+                <img className="p-2 w-16 h-16 rounded-full object-cover"src= {user.avatarUrl}></img>
+                <div>
+                <h2 className="font-bold">{user.name}</h2>
+                <p className= "text-gray-600 text-xs py-1">{showEmail?user.email:"No Email provided"}</p>
+                <p className= "text-gray-600 text-xs py-1">{showRole?user.role:"No Role provided"}</p>
+                </div>        
+            </div>
+            {onEdit && (<button className="bg-blue-500 px-25 py-1 text-white rounded hover:bg-blue-700" onClick= {()=>{onEdit(user.id)}}>Edit Profile</button>)}
+            <div>
+                {children}
+            </div>
+        </div>       
+    );
+};
+#Displays user details with optional sections for email and role.
+The onEdit prop adds an “Edit” button, and you can include extra child elements like activity info or timestamps.
+
+import React from 'react';
+
+import type { ProductDisplayProps } from '../../types';
+
+export const ProductDisplay: React.FC<ProductDisplayProps>  = ({product, showDescription, showStockStatus, onAddToCart, children}) =>{
+    return(
+        <div>
+            <img className="p-2 w-32 h-32 mx-auto" src={product.imageUrl}></img>
+            <div className="p-4">
+                <h3 className="font-bold">{product.name}</h3>
+                <p className="text-blue-500 font-bold">${product.price}</p>
+                <p className="text-gray-600">{showDescription?product.description:""}</p>
+                <p className="text-green-700">{showStockStatus?(product.inStock?"In Stock":"Out of Stock"):""}</p>
+            </div>
+            {onAddToCart && (<button className="bg-blue-500 px-25 py-1 text-white rounded hover:bg-blue-700" onClick={()=>{onAddToCart(product.id)}}>Add to Cart</button>)}
+        <div>
+            {children}
+        </div>
+        </div>
+
+    )
+};
+#Displays product info with optional description and stock status.
+The onAddToCart handler allows custom cart actions, and children can be used for extra details like shipping info.
+
+import { useState } from 'react'
+import './App.css'
+import { AlertBox } from './components/AlertBox/AlertBox'
+import { ProductDisplay } from './components/ProductDisplay/ProductDisplay'
+import { UserProfileCard } from './components/UserProfileCard/UserProfileCard'
+import type { Product } from './types'
+import type { User } from './types'
+
+function App() {
+
+  const user: User= {
+    id: "1",
+    name: "Ayaan",
+    email: "ayaanakbar08@gmail.com",
+    role: "Software Engineer",
+    avatarUrl: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  }
+  const product: Product= {
+    id:"1",
+    name:"Wireless Headphones",
+    price: 199,
+    description:"High-quality wireless headphones with noise cancellation.",
+    inStock: true,
+    imageUrl: "https://plus.unsplash.com/premium_photo-1678099940967-73fe30680949?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8aGVhZHBob25lc3xlbnwwfHwwfHx8MA%3D%3D&fm=jpg&q=60&w=3000"
+  }
+const [showAlert, setShowAlert] = useState(false);
+  const [cartItems, setCartItems] = useState<string[]>([]);
+ 
+  const handleAddToCart = (productId: string) => {
+    setCartItems([...cartItems, productId]);
+    setShowAlert(true);
+  };
+ 
+  return (
+    <div className="p-4">
+      {showAlert && (
+        <AlertBox
+          type="success"
+          message="Product added to cart!"
+          onClose={() => setShowAlert(false)}
+        />
+      )}
+ 
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <UserProfileCard
+          user={user}
+          showEmail={true}
+          showRole={true}
+        />
+ 
+        <ProductDisplay
+          product={product}
+          showDescription={true}
+          showStockStatus={true}
+          onAddToCart={handleAddToCart}
+        />
+      </div>
+    </div>
+  );
+}
+
+export default App
+#Description:
+Demonstrates how to compose and connect components.
+The parent manages shared state (showAlert, cart) and passes handlers (handleAddToCart) to child components.
